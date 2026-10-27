@@ -1,4 +1,4 @@
-use crate::flappybird::physics::{ApplyGravity, Position, Velocity};
+use crate::flappybird::physics::{ApplyGravity, ClampY, Position, Velocity};
 use bevy::prelude::*;
 
 const JUMP_VELOCITY: f32 = 10.0;
@@ -10,8 +10,18 @@ pub fn spawn_bird(mut commands: Commands) {
     commands.spawn((
         Bird,
         Position(Vec2::new(0.0, 0.0)),
-        Velocity(Vec2::new(0.0, 10.0)),
+        Velocity(Vec2::new(0.0, 5.0)),
         ApplyGravity,
+        Sprite {
+            color: Color::srgb(1.0, 0.8, 0.0),
+            custom_size: Some(Vec2::new(1.0, 1.0)),
+            ..default()
+        },
+        Transform::from_xyz(0.0, 0.0, 0.0),
+        ClampY {
+            min: -5.5,
+            max: 5.5,
+        },
     ));
 }
 
