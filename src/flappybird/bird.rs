@@ -1,7 +1,7 @@
 use crate::flappybird::physics::{ApplyGravity, ClampY, Position, Velocity};
 use bevy::prelude::*;
 
-const JUMP_VELOCITY: f32 = 10.0;
+const JUMP_VELOCITY: f32 = 12.0;
 
 #[derive(Component)]
 pub struct Bird;
@@ -19,8 +19,8 @@ pub fn spawn_bird(mut commands: Commands) {
         },
         Transform::from_xyz(0.0, 0.0, 0.0),
         ClampY {
-            min: -5.5,
-            max: 5.5,
+            min: -9.5,
+            max: 9.5,
         },
     ));
 }
