@@ -1,4 +1,4 @@
-use crate::flappybird::physics::{ApplyGravity, YPos, YVelocity};
+use crate::flappybird::physics::{ApplyGravity, Position, Velocity};
 use bevy::prelude::*;
 
 const JUMP_VELOCITY: f32 = 10.0;
@@ -7,13 +7,18 @@ const JUMP_VELOCITY: f32 = 10.0;
 pub struct Bird;
 
 pub fn spawn_bird(mut commands: Commands) {
-    commands.spawn((Bird, YPos(0.0), YVelocity(10.0), ApplyGravity));
+    commands.spawn((
+        Bird,
+        Position(Vec2::new(0.0, 0.0)),
+        Velocity(Vec2::new(0.0, 10.0)),
+        ApplyGravity,
+    ));
 }
 
-pub fn handle_jump(keys: Res<ButtonInput<KeyCode>>, mut query: Query<&mut YVelocity, With<Bird>>) {
+pub fn handle_jump(keys: Res<ButtonInput<KeyCode>>, mut query: Query<&mut Velocity, With<Bird>>) {
     if keys.just_pressed(KeyCode::Space) {
         for mut vel in &mut query {
-            vel.0 = JUMP_VELOCITY;
+            vel.0.y = JUMP_VELOCITY;
         }
     }
 }
