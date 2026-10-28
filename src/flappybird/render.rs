@@ -1,4 +1,3 @@
-use crate::flappybird::physics::{ClampY, Position, Velocity};
 use bevy::camera::ScalingMode;
 use bevy::prelude::*;
 
@@ -23,28 +22,5 @@ pub fn spawn_letterbox(mut commands: Commands) {
             Sprite::from_color(Color::BLACK, Vec2::splat(1000.0)),
             Transform::from_xyz(side * (FIELD_WIDTH / 2.0 + 500.0), 0.0, 100.0),
         ));
-    }
-}
-
-pub fn move_rigidbody(
-    fixed_time: Res<Time<Fixed>>,
-    mut query: Query<(
-        &mut Transform,
-        &Position,
-        Option<&Velocity>,
-        Option<&ClampY>,
-    )>,
-) {
-    let dt = fixed_time.overstep().as_secs_f32();
-
-    for (mut transform, pos, vel, clamp) in &mut query {
-        let mut p = pos.0;
-        if let Some(vel) = vel {
-            p += vel.0 * dt;
-        }
-        if let Some(c) = clamp {
-            p.y = p.y.clamp(c.min, c.max);
-        }
-        transform.translation = p.extend(transform.translation.z);
     }
 }

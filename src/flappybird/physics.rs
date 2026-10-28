@@ -34,3 +34,26 @@ pub fn apply_gravity(time: Res<Time>, mut query: Query<&mut Velocity, With<Apply
         vel.0.y += time.delta_secs() * GRAVITY;
     }
 }
+
+pub fn move_rigidbody(
+    fixed_time: Res<Time<Fixed>>,
+    mut query: Query<(
+        &mut Transform,
+        &Position,
+        Option<&Velocity>,
+        Option<&ClampY>,
+    )>,
+) {
+    let dt = fixed_time.overstep().as_secs_f32();
+
+    for (mut transform, pos, vel, clamp) in &mut query {
+        let mut p = pos.0;
+        if let Some(vel) = vel {
+            p += vel.0 * dt;
+        }
+        if let Some(c) = clamp {
+            p.y = p.y.clamp(c.min, c.max);
+        }
+        transform.translation = p.extend(transform.translation.z);
+    }
+}

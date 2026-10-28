@@ -34,7 +34,7 @@ impl Plugin for FlappyBirdPlugin {
             Update,
             (
                 (bird::handle_jump, pipes::pipes_spawner),
-                render::move_rigidbody,
+                physics::move_rigidbody,
             )
                 .chain(),
         );
