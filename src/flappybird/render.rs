@@ -1,4 +1,4 @@
-use crate::flappybird::physics::Position;
+use crate::flappybird::physics::{ClampY, Position, Velocity};
 use bevy::camera::ScalingMode;
 use bevy::prelude::*;
 
@@ -26,8 +26,25 @@ pub fn spawn_letterbox(mut commands: Commands) {
     }
 }
 
-pub fn move_rigidbody(mut query: Query<(&mut Transform, &Position)>) {
-    for (mut transform, pos) in &mut query {
-        transform.translation = (pos.0).extend(transform.translation.z);
+pub fn move_rigidbody(
+    fixed_time: Res<Time<Fixed>>,
+    mut query: Query<(
+        &mut Transform,
+        &Position,
+        Option<&Velocity>,
+        Option<&ClampY>,
+    )>,
+) {
+    let dt = fixed_time.overstep().as_secs_f32();
+
+    for (mut transform, pos, vel, clamp) in &mut query {
+        let mut p = pos.0;
+        if let Some(vel) = vel {
+            p += vel.0 * dt;
+        }
+        if let Some(c) = clamp {
+            p.y = p.y.clamp(c.min, c.max);
+        }
+        transform.translation = p.extend(transform.translation.z);
     }
 }
